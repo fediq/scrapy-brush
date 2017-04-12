@@ -1,0 +1,179 @@
+<!doctype html>
+<html ng-app>
+<head>
+    <title>Scrapy Brush frame</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/scrapybrush-iframe.css">
+    <script src="js/angular.js"></script>
+    <script src="js/scrapybrush-iframe.js"></script>
+</head>
+<body>
+<div id="scrapybrush_controller" ng-controller="ScrapyBrushController"
+     class="panel panel-info scrapybrush_ignore_all">
+    <div class="panel-heading">
+        <div class="btn-group btn-group-sm">
+            <a class="btn btn-sm glyphicon glyphicon-wrench"
+               ng-class="activeTab == 'initial' ? 'btn-primary' : 'btn-default'"
+               ng-click="activeTab='initial'"
+               title="Initial settings"></a>
+            <a class="btn btn-sm glyphicon glyphicon-tags"
+               ng-class="activeTab == 'fields' ? 'btn-primary' : 'btn-default'"
+               ng-click="activeTab='fields'"
+               title="Fields"></a>
+            <a class="btn btn-sm glyphicon glyphicon-share-alt"
+               ng-class="activeTab == 'urls' ? 'btn-primary' : 'btn-default'"
+               ng-click="activeTab='urls'"
+               title="URLs"></a>
+            <a class="btn btn-sm glyphicon glyphicon-ok"
+               ng-class="activeTab == 'schema' ? 'btn-primary' : 'btn-default'"
+               ng-click="activeTab='schema'; refreshSchema()"
+               title="Schema"></a>
+            <a class="btn btn-sm btn-info glyphicon glyphicon-transfer"
+               ng-click="togglePosition()"
+               title="Toggle position"></a>
+            <a class="btn btn-sm btn-danger glyphicon glyphicon-remove"
+               ng-click="disable()"
+               title="Close"></a>
+        </div>
+    </div>
+
+    <div class="panel-body" ng-show="activeTab == 'initial'">
+        <input class="input-sm form-control"
+               type="text"
+               placeholder="Page type ID"
+               ng-model="typeId"/>
+
+        <input class="input-sm form-control"
+               type="text"
+               placeholder="Object selector"
+               ng-model="objectSelector"
+               ng-focus="showSelection(objectSelector)"
+               ng-change="showSelection(objectSelector)"
+               ng-blur="hideSelection()"/>
+
+        <textarea class="form-control input-sm"
+                  rows="10"
+                  placeholder="Start URLs"
+                  ng-model="startUrls"></textarea>
+    </div>
+
+    <ul class="list-group" ng-show="activeTab == 'fields'">
+        <li class="list-group-item"
+            ng-repeat="field in fields">
+            <div class="input-group input-group-sm">
+                <input class="form-control"
+                       type="text"
+                       placeholder="Name"
+                       ng-model="field.name"/>
+                <div class="input-group-btn">
+                    <a class="glyphicon glyphicon-remove btn btn-warning"
+                       title="Delete field"
+                       ng-click="removeField(field)"></a>
+                </div>
+            </div>
+
+            <div class="input-group input-group-sm">
+                <input class="form-control"
+                       type="text"
+                       placeholder="Selector"
+                       ng-model="field.selector"
+                       ng-focus="showFieldSelection(field.selector)"
+                       ng-change="showFieldSelection(field.selector)"
+                       ng-blur="hideSelection()"/>
+                <span class="input-group-addon">
+                    <label class="glyphicon glyphicon-th-list" title="Allows multiple values"></label>
+                    <input type="checkbox" ng-model="field.multiple" title="Allows multiple values">
+                </span>
+            </div>
+
+            <div class="input-group input-group-sm">
+                <select class="form-control" ng-model="field.kind">
+                    <option value="text">text</option>
+                    <option value="html">html</option>
+                    <option value="attr">attr</option>
+                </select>
+                <label class="input-group-addon"
+                       ng-show="field.kind == 'attr'">:</label>
+                <input class="form-control"
+                       type="text"
+                       ng-model="field.attribute"
+                       ng-show="field.kind == 'attr'"
+                       placeholder="Attribute"/>
+            </div>
+        </li>
+    </ul>
+    <div class="panel-footer" ng-show="activeTab == 'fields'">
+        <a class="btn btn-primary btn-sm" ng-click="addField()">
+            <span class="glyphicon glyphicon-plus"></span>Field
+        </a>
+    </div>
+
+    <ul class="list-group" ng-show="activeTab == 'urls'">
+        <li class="list-group-item"
+            ng-repeat="url in urls">
+
+            <div class="input-group input-group-sm">
+                <input class="form-control"
+                       type="text"
+                       placeholder="Page type ID"
+                       ng-model="url.typeId"/>
+                <div class="input-group-btn">
+                    <a class="glyphicon glyphicon-remove btn btn-warning"
+                       title="Delete URL"
+                       ng-click="removeUrl(url)"></a>
+                </div>
+            </div>
+
+            <input class="input-sm form-control"
+                    type="text"
+                    placeholder="Selector"
+                    ng-model="url.selector"
+                    ng-focus="showSelection(url.selector)"
+                    ng-change="showSelection(url.selector)"
+                    ng-blur="hideSelection()"/>
+
+            <div class="input-group input-group-sm">
+                <select class="form-control" ng-model="url.kind">
+                    <option value="text">text</option>
+                    <option value="html">html</option>
+                    <option value="attr">attr</option>
+                </select>
+                <label class="input-group-addon"
+                       ng-show="url.kind == 'attr'">:</label>
+                <input class="form-control"
+                       type="text"
+                       ng-model="url.attribute"
+                       ng-show="url.kind == 'attr'"
+                       placeholder="Attribute"/>
+            </div>
+        </li>
+    </ul>
+    <div class="panel-footer" ng-show="activeTab == 'urls'">
+        <a class="btn btn-primary btn-sm" ng-click="addUrl()">
+            <span class="glyphicon glyphicon-plus"></span>Url
+        </a>
+    </div>
+
+    <div class="panel-body" ng-show="activeTab == 'schema'">
+        <textarea class="form-control input-sm"
+                  placeholder="Resulting schema"
+                  rows="10"
+                  readonly="true"
+                  ng-model="resultSchema"></textarea>
+
+    </div>
+
+    <div class="panel-footer" ng-show="activeTab == 'schema'">
+        <a class="btn btn-sm btn-primary" id="downloadSchema">
+            <span class="glyphicon glyphicon-save-file"></span>Export
+        </a>
+
+        <label class="btn btn-sm btn-info btn-file">
+            <span class="glyphicon glyphicon-open-file"></span> Import
+            <input type="file" id="importSchemaInput">
+        </label>
+    </div>
+</div>
+
+</body>
+</html>

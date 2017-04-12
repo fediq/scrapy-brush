@@ -1,0 +1,41 @@
+{
+  "manifest_version": 2,
+  "version": "0.2.0",
+  "name": "Scrapy Brush Schema Generator",
+  "short_name": "ScrapyBrush",
+  "description": "Brush is an extension for Scrapy, a popular web scrapping framework written in Python. Brush allows user to generate spider code automatically from site page schemas. This extension allows user to generate such schema right in browser.",
+  "permissions": [
+    "activeTab"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "browser_action": {
+    "default_icon": {
+      "256": "icons/scrapy256.png"
+    },
+    "default_title": "Scrapy Brush Schema Generator"
+  },
+  "icons": {
+    "256": "icons/scrapy256.png"
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "web_accessible_resources": [
+    "/plugin/loader.js",
+    "/plugin/scrapybrush-iframe.html",
+    "/plugin/js/scrapybrush.js",
+    "/plugin/js/scrapybrush-iframe.js",
+    "/plugin/js/angular.js",
+    "/plugin/js/jquery.js",
+    "/plugin/css/scrapybrush.css",
+    "/plugin/css/scrapybrush-iframe.css",
+    "/plugin/css/bootstrap.js",
+    "/plugin/fonts/glyphicons-halflings-regular.eot",
+    "/plugin/fonts/glyphicons-halflings-regular.svg",
+    "/plugin/fonts/glyphicons-halflings-regular.ttf",
+    "/plugin/fonts/glyphicons-halflings-regular.woff",
+    "/plugin/fonts/glyphicons-halflings-regular.woff2"
+  ]
+}

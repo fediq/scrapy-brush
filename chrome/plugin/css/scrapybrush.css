@@ -1,0 +1,26 @@
+#scrapybrush {
+    display: block;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: auto;
+    z-index: 9999999;
+    height: 100%;
+	width: 300px;
+    border: 0;
+    opacity: 1.0;
+}
+
+#scrapybrush.fullWidth {
+    width: 100%;
+}
+
+#scrapybrush.left {
+    right: auto;
+    left: 0;
+}
+
+.scrapybrush_select {
+  background-color: rgb(152, 176, 224) !important;
+  background-image: none !important;
+}
